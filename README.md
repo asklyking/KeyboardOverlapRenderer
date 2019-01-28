@@ -30,3 +30,7 @@ Example:
 **How to use and licence**
 
 Refer this repo: https://github.com/paulpatarinski/Xamarin.Forms.Plugins/tree/master/KeyboardOverlap
+
+**Contact me**
+
+Mail: tranducsang2910@gmail.com
