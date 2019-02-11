@@ -19,10 +19,18 @@ namespace KeyboardOverlap.Forms.Plugin.iOSUnified
         private bool _pageWasShiftedUp;
         private double _activeViewBottom;
         private bool _isKeyboardShown;
+        private static OverlapType overlapType;
 
-        public static void Init()
+        public enum OverlapType
+        {
+            ShiftUp = 0,
+            Collapse
+        };
+
+        public static void Init(OverlapType type)
         {
             var now = DateTime.Now;
+            overlapType = type;
             Debug.WriteLine("Keyboard Overlap plugin initialized {0}", now);
         }
 
@@ -99,7 +107,17 @@ namespace KeyboardOverlap.Forms.Plugin.iOSUnified
             var keyboardFrame = UIKeyboard.FrameEndFromNotification(notification);
             _activeViewBottom = activeView.GetViewRelativeBottom(View);
 
-            ShiftPageUp(keyboardFrame.Height);
+            switch (overlapType)
+            {
+                case OverlapType.ShiftUp:
+                    ShiftPageUp(keyboardFrame.Height);
+                    break;
+                case OverlapType.Collapse:
+                    CollapseKeyboard(keyboardFrame.Height);
+                    break;
+                default:
+                    break;
+            }
         }
 
         private void OnKeyboardHide(NSNotification notification)
@@ -128,7 +146,17 @@ namespace KeyboardOverlap.Forms.Plugin.iOSUnified
 
             var keyboardFrame = UIKeyboard.FrameEndFromNotification(notification);
 
-            ShiftPageUp(keyboardFrame.Height);
+            switch(overlapType)
+            {
+                case OverlapType.ShiftUp:
+                    ShiftPageUp(keyboardFrame.Height);
+                    break;
+                case OverlapType.Collapse:
+                    CollapseKeyboard(keyboardFrame.Height);
+                    break;
+                default:
+                    break;
+            }
         }
 
         private void ShiftPageUp(nfloat keyboardHeight)
@@ -142,12 +170,22 @@ namespace KeyboardOverlap.Forms.Plugin.iOSUnified
             _pageWasShiftedUp = true;
         }
 
+        private void CollapseKeyboard(nfloat keyboardHeight)
+        {
+            var pageFrame = Element.Bounds;
+
+            Element.LayoutTo(new Rectangle(pageFrame.X, pageFrame.Y,
+                pageFrame.Width, UIApplication.SharedApplication.KeyWindow.Frame.Height - keyboardHeight));
+
+            _pageWasShiftedUp = true;
+        }
+
         private void ResetPagePositon(nfloat keyboardHeight)
         {
             var pageFrame = Element.Bounds;
 
             Element.LayoutTo(new Rectangle(pageFrame.X, UIApplication.SharedApplication.KeyWindow.Frame.Y,
-                pageFrame.Width, pageFrame.Height));
+                pageFrame.Width, UIApplication.SharedApplication.KeyWindow.Frame.Height));
 
             _pageWasShiftedUp = false;
         }
