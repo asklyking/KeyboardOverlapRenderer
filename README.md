@@ -31,6 +31,18 @@ Example:
 
 Refer this repo: https://github.com/paulpatarinski/Xamarin.Forms.Plugins/tree/master/KeyboardOverlap
 
+Notice: When call method Init, you must pass the OverlapType: 
+
+KeyboardOverlapRenderer.Init(KeyboardOverlapRenderer.OverlapType.ShiftUp);
+
+![Example ShiftUp Implement](Image/ShiftUp.png)
+
+or:
+
+KeyboardOverlapRenderer.Init(KeyboardOverlapRenderer.OverlapType.Collapse);
+
+![Example Collapse Implement](Image/Collapse.png)
+
 **Contact me**
 
 Mail: tranducsang2910@gmail.com
